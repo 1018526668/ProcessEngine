@@ -11,7 +11,7 @@
     <bpmn:endEvent id="Event_1qpx0xp" name="审批同意结束">
       <bpmn:incoming>Flow_0xu2grp</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:userTask id="Activity_0r4qu92" name="财务审批" camunda:assignee="admin">
+    <bpmn:userTask id="Activity_0r4qu92" name="财务审批">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="passed" label="passed?" type="boolean" />
