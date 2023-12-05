@@ -14,7 +14,7 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0uyu1b8" sourceRef="Activity_116uyvv" targetRef="Event_1qpx0xp" />
     <bpmn:sequenceFlow id="Flow_1acurje" sourceRef="StartEvent_1" targetRef="Activity_0r4qu92" />
-    <bpmn:userTask id="Activity_0r4qu92" name="审批" camunda:assignee="kermit">
+    <bpmn:userTask id="Activity_0r4qu92" name="审批" camunda:assignee="admin">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="approve" label="approve?" type="enum">
