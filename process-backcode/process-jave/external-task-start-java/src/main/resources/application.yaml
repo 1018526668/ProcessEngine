@@ -1,0 +1,15 @@
+server:
+  port: 8081
+
+
+camunda:
+  bpm:
+    client:
+      base-url: http://localhost:8080/engine-rest #引擎根路径
+      async-response-timeout: 20000 #长轮询挂起时间间隔
+      max-tasks: 1 #一次拉取的任务数量
+      lock-duration: 10000 #全局topic上锁时间，单位毫秒，锁住期间，其它订阅者拉取不了任务，注解中写了就会覆盖这个时间
+      worker-id:  java-client #指定工作节点的id
+      basic-auth:
+        username: aoji    #camunda引擎开启路径鉴权后,客户端就需要账户密码登录鉴权
+        password: 123456
