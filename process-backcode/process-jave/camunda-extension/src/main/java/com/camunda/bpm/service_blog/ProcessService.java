@@ -1,4 +1,4 @@
-package com.camunda.bpm.service;
+package com.camunda.bpm.service_blog;
 
 public interface ProcessService {
      String startProcess(long amount, String role, String useFor);

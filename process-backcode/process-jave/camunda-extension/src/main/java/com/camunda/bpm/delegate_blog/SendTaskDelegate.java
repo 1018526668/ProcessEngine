@@ -1,4 +1,4 @@
-package com.camunda.bpm.delegate;
+package com.camunda.bpm.delegate_blog;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;

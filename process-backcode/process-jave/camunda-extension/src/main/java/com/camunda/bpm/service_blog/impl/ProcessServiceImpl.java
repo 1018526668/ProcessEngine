@@ -1,6 +1,6 @@
-package com.camunda.bpm.service.impl;
+package com.camunda.bpm.service_blog.impl;
 
-import com.camunda.bpm.service.ProcessService;
+import com.camunda.bpm.service_blog.ProcessService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.runtime.Execution;

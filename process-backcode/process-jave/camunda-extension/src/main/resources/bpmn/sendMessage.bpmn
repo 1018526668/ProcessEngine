@@ -9,7 +9,7 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0uyu1b8" sourceRef="Activity_116uyvv" targetRef="Event_1qpx0xp" />
     <bpmn:sequenceFlow id="Flow_1acurje" sourceRef="StartEvent_1" targetRef="Activity_116uyvv" />
-    <bpmn:sendTask id="Activity_116uyvv" name="send message" camunda:class="com.camunda.bpm.delegate.SendTaskDelegate">
+    <bpmn:sendTask id="Activity_116uyvv" name="send message" camunda:class="com.camunda.bpm.delegate_blog.SendTaskDelegate">
       <bpmn:incoming>Flow_1acurje</bpmn:incoming>
       <bpmn:outgoing>Flow_0uyu1b8</bpmn:outgoing>
     </bpmn:sendTask>

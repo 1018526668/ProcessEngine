@@ -1,6 +1,6 @@
-package com.camunda.bpm.controller;
+package com.camunda.bpm.controller_blog;
 
-import com.camunda.bpm.service.ProcessService;
+import com.camunda.bpm.service_blog.ProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

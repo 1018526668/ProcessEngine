@@ -1,7 +1,10 @@
 package com.camunda.bpm.userTask.controller;
 
 import org.camunda.bpm.engine.IdentityService;
+import org.camunda.bpm.engine.ProcessEngine;
+import org.camunda.bpm.engine.ProcessEngines;
 import org.camunda.bpm.engine.RuntimeService;
+import org.camunda.bpm.engine.runtime.ActivityInstance;
 import org.camunda.bpm.engine.runtime.Execution;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.variable.VariableMap;
@@ -34,7 +37,29 @@ public class UserTasksController {
         leaders.add("aoji");
         leaders.add("test");
         variables.put("leaders",leaders);
+
+
+
         Execution execution = runtimeService.startProcessInstanceByKey(processKey,variables);
         return "实例启动成功，实例ID：" + execution.getProcessInstanceId();
     }
+
+//    @GetMapping("/deleteProcessInstances/{processKey}")
+//    public String deleteProcessInstance(@PathVariable("processKey") String processKey){
+//
+//        deleteAllProcessInstanceByProcessKey(processKey);
+//        return "删除成功";
+//    }
+//
+//    private void deleteAllProcessInstanceByProcessKey(String processKey){
+//        List<ProcessInstance> processInstances = runtimeService.createProcessInstanceQuery()
+//                .processDefinitionId(processKey)
+//                .list();
+//
+//        for (ProcessInstance processInstance : processInstances) {
+//            System.out.println(processInstance.getProcessInstanceId());
+////            runtimeService.deleteProcessInstance(processInstance.getId(), "Your delete reason");
+//        }
+//    }
+
 }
