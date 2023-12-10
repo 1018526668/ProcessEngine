@@ -15,7 +15,9 @@ public class CheckNegtiveService {
     public ExternalTaskHandler checkNegtive(){
         return (externalTask, externalTaskService)->{
             System.out.println("进入检查是否负面影响");
-            String videoName = externalTask.getVariable("videoName");
+//            String videoName = externalTask.getVariable("videoName");
+            //        targetVideoName是子流程接收主流程的接收本地参数
+            String videoName = (String) externalTask.getVariable("targetVideoName");
             System.out.println("视频名称是==>"+videoName);
             externalTaskService.complete(externalTask);
         };

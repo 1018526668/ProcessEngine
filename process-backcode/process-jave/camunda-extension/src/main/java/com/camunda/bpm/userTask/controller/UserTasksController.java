@@ -33,12 +33,16 @@ public class UserTasksController {
 //        variables.put("isFree",false);
 //        串行化任务，执行人，只能按照添加的顺序依次审批，才会到下一个审批人手中
 //        并行化 任务，任意一个审批人同意即可
-        List<String> leaders = new LinkedList<>();
-        leaders.add("aoji");
-        leaders.add("test");
-        variables.put("leaders",leaders);
+//        List<String> leaders = new LinkedList<>();
+//        leaders.add("aoji");
+//        leaders.add("test");
+//        variables.put("leaders",leaders);
 
-
+        List<String> videoNames = new LinkedList<>();
+        videoNames.add("狐妖小红娘");
+        videoNames.add("妖怪名单");
+        videoNames.add("一剑轻安");
+        variables.put("videoNames",videoNames);
 
         Execution execution = runtimeService.startProcessInstanceByKey(processKey,variables);
         return "实例启动成功，实例ID：" + execution.getProcessInstanceId();
