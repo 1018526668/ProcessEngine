@@ -6,6 +6,8 @@ camunda:
       first-name: admin
     filter:
       create: All tasks
+    auto-deployment-enabled: true  #是否自动部署，默认为true
+    history-level: auto   #数据库保存数据的级别，中途修改不管用，必须清空数据库才行
 #    dmn:
 #      file-path: dmn/approve-decision.dmn
 
