@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0vuba65" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.17.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.20.0">
+  <bpmn:process id="Process_leavetask_multi_23120818" name="多实例任务流程" isExecutable="true" camunda:versionTag="1.0" camunda:historyTimeToLive="180">
+    <bpmn:startEvent id="StartEvent_1" camunda:initiator="starter">
+      <bpmn:outgoing>Flow_0qmtjky</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0qmtjky" sourceRef="StartEvent_1" targetRef="Activity_18pgyqm" />
+    <bpmn:userTask id="Activity_18pgyqm" name="请假流程" camunda:assignee="${starter}">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="name" label="姓名" type="string" defaultValue="${starter}" />
+          <camunda:formField id="days" label="天数" type="long" defaultValue="1" />
+          <camunda:formField id="reason" label="原因" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0qmtjky</bpmn:incoming>
+      <bpmn:outgoing>Flow_0h41jbw</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Event_16wwbwg">
+      <bpmn:incoming>Flow_0yr7haz</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="Activity_00e4sxw" name="上级批准流程" camunda:assignee="${leader}">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="agree" label="同意" type="boolean" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:multiInstanceLoopCharacteristics isSequential="true" camunda:collection="${leaders}" camunda:elementVariable="leader" />
+    </bpmn:userTask>
+    <bpmn:userTask id="Activity_04c85gd" name="上级批准流程" camunda:assignee="${leader}">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="agree" label="同意" type="boolean" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0h41jbw</bpmn:incoming>
+      <bpmn:outgoing>Flow_0yr7haz</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="${leaders}" camunda:elementVariable="leader">
+        <bpmn:completionCondition xsi:type="bpmn:tFormalExpression">${nrOfCompletedInstances ==1}</bpmn:completionCondition>
+      </bpmn:multiInstanceLoopCharacteristics>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0h41jbw" sourceRef="Activity_18pgyqm" targetRef="Activity_04c85gd" />
+    <bpmn:sequenceFlow id="Flow_0yr7haz" sourceRef="Activity_04c85gd" targetRef="Event_16wwbwg" />
+    <bpmn:textAnnotation id="TextAnnotation_0syzjj4">
+      <bpmn:text>串行化审批，添加两个领导审批，都要按序全部审批才完成</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1oetkj9" sourceRef="Activity_00e4sxw" targetRef="TextAnnotation_0syzjj4" />
+    <bpmn:textAnnotation id="TextAnnotation_1p24j9w">
+      <bpmn:text>并行化审批，两个领导，任意一个领导审批即可审批</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0j507qd" sourceRef="Activity_04c85gd" targetRef="TextAnnotation_1p24j9w" />
+    <bpmn:textAnnotation id="TextAnnotation_0jo8eb4">
+      <bpmn:text>nrOfActiviteInstances  ：还没有完成的实例数目</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1bhwqxs" sourceRef="Activity_04c85gd" targetRef="TextAnnotation_0jo8eb4" />
+    <bpmn:textAnnotation id="TextAnnotation_1cu0i69">
+      <bpmn:text>loopCounter  ：循环计数器，办理人在列表的索引</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_13qe7yx" sourceRef="Activity_04c85gd" targetRef="TextAnnotation_1cu0i69" />
+    <bpmn:textAnnotation id="TextAnnotation_13qvnmk">
+      <bpmn:text>nrOfInstances ：多实例任务中，总共的实例数目</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0ffi1jy" sourceRef="Activity_04c85gd" targetRef="TextAnnotation_13qvnmk" />
+    <bpmn:textAnnotation id="TextAnnotation_0sx5zcg">
+      <bpmn:text>nrOfCompletedInstances ：已经完成的实例数目。可以通过使用${nrOfCompletedInstances ==1} 作为循环跳出的条件，表示有一个领导审批就跳出</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0j10jqs" sourceRef="Activity_04c85gd" targetRef="TextAnnotation_0sx5zcg" />
+    <bpmn:textAnnotation id="TextAnnotation_1vwasbo">
+      <bpmn:text>串行，跳出的条件为空，表示全部完成就跳出</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1by1e1h" sourceRef="Activity_00e4sxw" targetRef="TextAnnotation_1vwasbo" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_leavetask_multi_23120818">
+      <bpmndi:BPMNShape id="TextAnnotation_0syzjj4_di" bpmnElement="TextAnnotation_0syzjj4">
+        <dc:Bounds x="490" y="600" width="340" height="40" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1p24j9w_di" bpmnElement="TextAnnotation_1p24j9w">
+        <dc:Bounds x="530" y="380" width="100" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0jo8eb4_di" bpmnElement="TextAnnotation_0jo8eb4">
+        <dc:Bounds x="310" y="250" width="270" height="26" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1cu0i69_di" bpmnElement="TextAnnotation_1cu0i69">
+        <dc:Bounds x="430" y="280" width="280" height="40" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_13qvnmk_di" bpmnElement="TextAnnotation_13qvnmk">
+        <dc:Bounds x="530" y="170" width="330" height="30" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0sx5zcg_di" bpmnElement="TextAnnotation_0sx5zcg">
+        <dc:Bounds x="340" y="80" width="520" height="55" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1vwasbo_di" bpmnElement="TextAnnotation_1vwasbo">
+        <dc:Bounds x="750" y="800" width="300" height="30" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="489" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0xvr4g1_di" bpmnElement="Activity_18pgyqm">
+        <dc:Bounds x="270" y="467" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_16wwbwg_di" bpmnElement="Event_16wwbwg">
+        <dc:Bounds x="592" y="489" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_06ldfa3_di" bpmnElement="Activity_00e4sxw">
+        <dc:Bounds x="440" y="700" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1saa8xk" bpmnElement="Activity_04c85gd">
+        <dc:Bounds x="430" y="467" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1oetkj9_di" bpmnElement="Association_1oetkj9">
+        <di:waypoint x="506" y="700" />
+        <di:waypoint x="530" y="640" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0j507qd_di" bpmnElement="Association_0j507qd">
+        <di:waypoint x="516" y="467" />
+        <di:waypoint x="531" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1bhwqxs_di" bpmnElement="Association_1bhwqxs">
+        <di:waypoint x="460" y="467" />
+        <di:waypoint x="365" y="276" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_13qe7yx_di" bpmnElement="Association_13qe7yx">
+        <di:waypoint x="480" y="467" />
+        <di:waypoint x="480" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0ffi1jy_di" bpmnElement="Association_0ffi1jy">
+        <di:waypoint x="492" y="467" />
+        <di:waypoint x="575" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0j10jqs_di" bpmnElement="Association_0j10jqs">
+        <di:waypoint x="471" y="467" />
+        <di:waypoint x="399" y="135" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1by1e1h_di" bpmnElement="Association_1by1e1h">
+        <di:waypoint x="540" y="752" />
+        <di:waypoint x="750" y="803" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0qmtjky_di" bpmnElement="Flow_0qmtjky">
+        <di:waypoint x="215" y="507" />
+        <di:waypoint x="270" y="507" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0h41jbw_di" bpmnElement="Flow_0h41jbw">
+        <di:waypoint x="370" y="507" />
+        <di:waypoint x="430" y="507" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0yr7haz_di" bpmnElement="Flow_0yr7haz">
+        <di:waypoint x="530" y="507" />
+        <di:waypoint x="592" y="507" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

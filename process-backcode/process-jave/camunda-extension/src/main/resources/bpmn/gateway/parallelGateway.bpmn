@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0o45d3h" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.17.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.20.0">
+  <bpmn:process id="Process_parallel-gateway" name="并行网关" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:startEvent id="StartEvent_1" camunda:initiator="starter">
+      <bpmn:outgoing>Flow_1ncdf5k</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1ncdf5k" sourceRef="StartEvent_1" targetRef="Activity_00y52bl" />
+    <bpmn:userTask id="Activity_00y52bl" name="用户上传视频" camunda:assignee="${starter}">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="videoName" label="视频名称" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1ncdf5k</bpmn:incoming>
+      <bpmn:outgoing>Flow_1kf4btd</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1kf4btd" sourceRef="Activity_00y52bl" targetRef="Gateway_157fvd4" />
+    <bpmn:parallelGateway id="Gateway_157fvd4">
+      <bpmn:incoming>Flow_1kf4btd</bpmn:incoming>
+      <bpmn:outgoing>Flow_1id8fbp</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0r2ysve</bpmn:outgoing>
+      <bpmn:outgoing>Flow_17zkyqd</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0h7eff0</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="Flow_1id8fbp" sourceRef="Gateway_157fvd4" targetRef="Activity_12t4u9d" />
+    <bpmn:serviceTask id="Activity_12t4u9d" name="视频格式校验" camunda:delegateExpression="${checkVideoFormate}">
+      <bpmn:incoming>Flow_1id8fbp</bpmn:incoming>
+      <bpmn:outgoing>Flow_1vfrw5j</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0r2ysve" sourceRef="Gateway_157fvd4" targetRef="Activity_1qd2mbi" />
+    <bpmn:userTask id="Activity_1qd2mbi" name="涉黄鉴别" camunda:assignee="aoji">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="isPass" label="是否通过" type="boolean" defaultValue="true" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0r2ysve</bpmn:incoming>
+      <bpmn:outgoing>Flow_1yf2iwl</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_17zkyqd" sourceRef="Gateway_157fvd4" targetRef="Activity_1mbka8w" />
+    <bpmn:userTask id="Activity_1mbka8w" name="涉暴鉴别" camunda:assignee="test">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="isPass" label="是否通过" type="boolean" defaultValue="true" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_17zkyqd</bpmn:incoming>
+      <bpmn:outgoing>Flow_15rsmb8</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0h7eff0" sourceRef="Gateway_157fvd4" targetRef="Activity_03x5su3" />
+    <bpmn:serviceTask id="Activity_03x5su3" name="负面影响鉴别" camunda:type="external" camunda:topic="check_Negtive">
+      <bpmn:incoming>Flow_0h7eff0</bpmn:incoming>
+      <bpmn:outgoing>Flow_14r2lh6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1yf2iwl" sourceRef="Activity_1qd2mbi" targetRef="Gateway_02pwv96" />
+    <bpmn:parallelGateway id="Gateway_02pwv96">
+      <bpmn:incoming>Flow_1yf2iwl</bpmn:incoming>
+      <bpmn:incoming>Flow_1vfrw5j</bpmn:incoming>
+      <bpmn:incoming>Flow_15rsmb8</bpmn:incoming>
+      <bpmn:incoming>Flow_14r2lh6</bpmn:incoming>
+      <bpmn:outgoing>Flow_0apmiq9</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="Flow_1vfrw5j" sourceRef="Activity_12t4u9d" targetRef="Gateway_02pwv96" />
+    <bpmn:sequenceFlow id="Flow_15rsmb8" sourceRef="Activity_1mbka8w" targetRef="Gateway_02pwv96" />
+    <bpmn:sequenceFlow id="Flow_14r2lh6" sourceRef="Activity_03x5su3" targetRef="Gateway_02pwv96" />
+    <bpmn:sequenceFlow id="Flow_0apmiq9" sourceRef="Gateway_02pwv96" targetRef="Activity_1hej90b" />
+    <bpmn:userTask id="Activity_1hej90b" name="确定上传" camunda:assignee="admin">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="isUpload" label="是否上传" type="boolean" defaultValue="true" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0apmiq9</bpmn:incoming>
+    </bpmn:userTask>
+    <bpmn:textAnnotation id="TextAnnotation_1i8edsy">
+      <bpmn:text>并行网关右边路径都会执行，不用加条件</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_02u7d93" sourceRef="Gateway_157fvd4" targetRef="TextAnnotation_1i8edsy" />
+    <bpmn:textAnnotation id="TextAnnotation_185zw0v">
+      <bpmn:text>并行网关左边路径都执行完成，才会执行右边的</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0gq4gpg" sourceRef="Gateway_02pwv96" targetRef="TextAnnotation_185zw0v" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_parallel-gateway">
+      <bpmndi:BPMNShape id="TextAnnotation_1i8edsy_di" bpmnElement="TextAnnotation_1i8edsy">
+        <dc:Bounds x="370" y="80" width="230" height="26" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_185zw0v_di" bpmnElement="TextAnnotation_185zw0v">
+        <dc:Bounds x="750" y="90" width="270" height="55" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="249" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_01wn23z_di" bpmnElement="Activity_00y52bl">
+        <dc:Bounds x="270" y="227" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_114arw6_di" bpmnElement="Gateway_157fvd4">
+        <dc:Bounds x="425" y="242" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_03g97y6_di" bpmnElement="Activity_1qd2mbi">
+        <dc:Bounds x="530" y="227" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0a2cill_di" bpmnElement="Activity_12t4u9d">
+        <dc:Bounds x="530" y="120" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1x94vra_di" bpmnElement="Activity_1mbka8w">
+        <dc:Bounds x="530" y="340" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0pws73s_di" bpmnElement="Activity_03x5su3">
+        <dc:Bounds x="530" y="450" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1g5mhwg_di" bpmnElement="Gateway_02pwv96">
+        <dc:Bounds x="685" y="242" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ffemhb_di" bpmnElement="Activity_1hej90b">
+        <dc:Bounds x="790" y="227" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_02u7d93_di" bpmnElement="Association_02u7d93">
+        <di:waypoint x="446" y="246" />
+        <di:waypoint x="422" y="106" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0gq4gpg_di" bpmnElement="Association_0gq4gpg">
+        <di:waypoint x="719" y="251" />
+        <di:waypoint x="778" y="145" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ncdf5k_di" bpmnElement="Flow_1ncdf5k">
+        <di:waypoint x="215" y="267" />
+        <di:waypoint x="270" y="267" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1kf4btd_di" bpmnElement="Flow_1kf4btd">
+        <di:waypoint x="370" y="267" />
+        <di:waypoint x="425" y="267" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1id8fbp_di" bpmnElement="Flow_1id8fbp">
+        <di:waypoint x="450" y="242" />
+        <di:waypoint x="450" y="160" />
+        <di:waypoint x="530" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0r2ysve_di" bpmnElement="Flow_0r2ysve">
+        <di:waypoint x="475" y="267" />
+        <di:waypoint x="530" y="267" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_17zkyqd_di" bpmnElement="Flow_17zkyqd">
+        <di:waypoint x="450" y="292" />
+        <di:waypoint x="450" y="380" />
+        <di:waypoint x="530" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0h7eff0_di" bpmnElement="Flow_0h7eff0">
+        <di:waypoint x="450" y="292" />
+        <di:waypoint x="450" y="490" />
+        <di:waypoint x="530" y="490" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1yf2iwl_di" bpmnElement="Flow_1yf2iwl">
+        <di:waypoint x="630" y="267" />
+        <di:waypoint x="685" y="267" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1vfrw5j_di" bpmnElement="Flow_1vfrw5j">
+        <di:waypoint x="630" y="160" />
+        <di:waypoint x="710" y="160" />
+        <di:waypoint x="710" y="242" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15rsmb8_di" bpmnElement="Flow_15rsmb8">
+        <di:waypoint x="630" y="380" />
+        <di:waypoint x="710" y="380" />
+        <di:waypoint x="710" y="292" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14r2lh6_di" bpmnElement="Flow_14r2lh6">
+        <di:waypoint x="630" y="490" />
+        <di:waypoint x="710" y="490" />
+        <di:waypoint x="710" y="292" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0apmiq9_di" bpmnElement="Flow_0apmiq9">
+        <di:waypoint x="735" y="267" />
+        <di:waypoint x="790" y="267" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -4,7 +4,7 @@
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>Flow_1acurje</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:serviceTask id="Activity_116uyvv" name="审核" camunda:class="com.camunda.bpm.delegate.AuditDelegate">
+    <bpmn:serviceTask id="Activity_116uyvv" name="审核" camunda:class="com.camunda.bpm.delegate_blog.AuditDelegate">
       <bpmn:incoming>Flow_0bx57d5</bpmn:incoming>
       <bpmn:outgoing>Flow_0uyu1b8</bpmn:outgoing>
     </bpmn:serviceTask>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0rlvwar" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.17.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.20.0">
+  <bpmn:process id="Process_receiveTask23120908" name="接收任务" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0q0chuw</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0q0chuw" sourceRef="StartEvent_1" targetRef="Activity_1ve0sis" />
+    <bpmn:receiveTask id="Activity_1ve0sis" name="接收任务" messageRef="Message_07uu90k">
+      <bpmn:incoming>Flow_0q0chuw</bpmn:incoming>
+      <bpmn:outgoing>Flow_1kxv1ve</bpmn:outgoing>
+    </bpmn:receiveTask>
+    <bpmn:endEvent id="Event_0f86agd">
+      <bpmn:incoming>Flow_1kxv1ve</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1kxv1ve" sourceRef="Activity_1ve0sis" targetRef="Event_0f86agd" />
+    <bpmn:textAnnotation id="TextAnnotation_0a06luh">
+      <bpmn:text>要创建一个消息id</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0e8xgd0" sourceRef="Activity_1ve0sis" targetRef="TextAnnotation_0a06luh" />
+  </bpmn:process>
+  <bpmn:message id="Message_07uu90k" name="Message_receiveTask_20120908" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_receiveTask23120908">
+      <bpmndi:BPMNShape id="TextAnnotation_0a06luh_di" bpmnElement="TextAnnotation_0a06luh">
+        <dc:Bounds x="370" y="50" width="100" height="41" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="159" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_116k8nd_di" bpmnElement="Activity_1ve0sis">
+        <dc:Bounds x="270" y="137" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0f86agd_di" bpmnElement="Event_0f86agd">
+        <dc:Bounds x="432" y="159" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0e8xgd0_di" bpmnElement="Association_0e8xgd0">
+        <di:waypoint x="356" y="137" />
+        <di:waypoint x="397" y="91" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0q0chuw_di" bpmnElement="Flow_0q0chuw">
+        <di:waypoint x="215" y="177" />
+        <di:waypoint x="270" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1kxv1ve_di" bpmnElement="Flow_1kxv1ve">
+        <di:waypoint x="370" y="177" />
+        <di:waypoint x="432" y="177" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
